@@ -1,0 +1,360 @@
+# Flow specification version
+version: "0.1.0"                                    # Flow specification version
+
+metadata:
+  flow_type: "compound"                             # Specifies this as a compound flow
+  name: "travel-planner-3"                            # Unique identifier
+  description: "This flow achieves the task of giving the user all information about the place he/she wants to travel including safety, price and mood of the user."
+  author: "riteshco"                           # Your Mira Flows username
+  tags: [travel, price, Safety]                         # Discovery keywords
+  private: true                                     # Access control setting
+
+inputs:
+  prime_input_1:                                    # Mood parameter
+    type: string
+    description: "This input is for mood of the user"
+    required: true
+    example: "adventurous , gloomy , excited ,etc."
+  prime_input_2:                                    # Duration parameter
+    type: string
+    description: "This input is for duration of the tour"
+    required: true
+    example: "10-15 , 20-25 , 65-70 ,etc."
+  prime_input_3:                                    # Domestic / International parameter
+    type: string
+    description: "Place where user lives"
+    required: true
+    example: "Chandigarh , Chicago, etc."
+  prime_input_4:                                    # Budget parameter
+    type: string
+    description: "This input is for the budget mentioned by the user"
+    required: true
+    example: ""
+  prime_input_5:                                    # Transport parameter
+    type: string
+    description: "This input is for the prefered mode of transport by user."
+    required: true
+    example: "train , flight, etc."
+  prime_input_6:                                    # Transport parameter
+    type: string
+    description: "This input is for to check safety on basis of crime rate"
+    required: true
+    example: ""
+
+workflow:
+  # Elemental Flow stage - starts immediately
+  first_flow:                                      # Parallel processing stage
+    type: "custom"
+    inputs:
+      input1: ${inputs.prime_input_1}
+      input2: ${inputs.prime_input_2}
+      input3: ${inputs.prime_input_3}
+      input4: ${inputs.prime_input_4}
+    model:
+      provider: "openai"                     # e.g., anthropic, openai, meta, etc.
+      name: "gpt-4o"                            # Specific model identifier
+    prompt: |
+      You are a highly intelligent travel assistant tasked with suggesting the best travel destinations (domestically and internationally) tailored to the user's preferences. The suggestions should align with the user’s **mood**, **budget**, **current location**, and **duration of the trip**. Provide a mix of domestic and international options when feasible.
+
+      ### User Inputs:
+      1. {input1}: The user's mood or type of trip they are looking for. Possible moods include relaxing, adventurous, cultural, romantic, nature-focused, luxurious, etc.
+      2. {input4}: The user's approximate budget for the trip. Specify low (economical), medium (moderate), or high (luxury). Use ranges like <$500, $500–$2000, or >$2000.
+      3. {input3}: The city or country where the user resides.
+      4. {input2}: The number of days or weeks the user has available for the trip.
+
+      ### Requirements:
+      1. Suggest at least **2–3 domestic destinations** (within the user’s country).
+      2. Suggest at least **2–3 international destinations** that fit the user’s criteria.
+      3. For each destination, include:
+         - A short description of why this destination suits the user's preferences.
+         - Key attractions or activities in that destination.
+         - An approximate cost breakdown (transport, accommodation, activities) matching the user's budget.
+         - Travel feasibility based on the trip duration.
+         - All the tourist spots
+         - Expenses of tourist spots
+         - Suggestion of places according to the budget
+
+      ### Example Format for the Response:
+
+      #### **Domestic Destinations:**
+      1. **[Destination Name]**:
+         - **Why It Matches**: [Explain how it aligns with the user's mood and preferences.]
+         - **Key Attractions**: [List attractions or activities in the destination.]
+         - **Cost Estimate**: [Provide approximate costs.]
+         - **Travel Feasibility**: [Explain how this fits within the user's available trip duration.]
+      2. **[Destination Name]**:
+       - **Why It Matches**: [Same structure as above.]
+
+      #### **International Destinations:**
+      1. **[Destination Name, Country]**:
+       - **Why It Matches**: [Explain why this destination is a great fit.]
+       - **Key Attractions**: [List attractions or activities.]
+       - **Cost Estimate**: [Provide approximate costs in the user's currency.]
+       - **Travel Feasibility**: [Discuss travel time and duration compatibility.]
+
+      ### Additional Guidelines:
+      1. If the budget is low, prioritize affordable travel options, hostels, and economical destinations.
+      2. If the budget is high, suggest luxurious stays, premium experiences, and exclusive destinations.
+      3. If the mood is adventurous, suggest activities like hiking, diving, or safaris.
+      4. If the mood is relaxing, suggest destinations with beaches, spas, or tranquil resorts.
+      5. Consider the user's current location to recommend destinations that minimize travel time for short trips.
+      6. Provide culturally diverse recommendations for international travel.
+
+      Generate recommendations in a conversational and friendly tone while ensuring they are practical and tailored to the inputs provided.
+
+      Now, suggest suitable travel destinations.
+      give minimum three places
+      give the result in json format
+
+
+  # Waits for both first_flow and second_flow to complete
+  mid_first_flow:                                       
+    type: "custom"
+    depends_on: [first_flow]  # Dependent on fist_flow , second_flow and third_flow
+    inputs:
+      inputm1: ${inputs.prime_input_6}
+      inputm2: ${first_flow.output} # uses output of second_flow as input
+    model:
+      provider: "openai"
+      name: "gpt-4o"
+    prompt: |
+      You are a highly intelligent and analytical assistant specializing in crime data analysis. Your task is to analyze crime news data provided in JSON format and provide insights about the crime rate and safety of a specific place.
+
+      ### Inputs:
+      1. {inputm1}: Contains crime-related news articles for a specific place, retrieved from a news API. Each news item includes fields like:
+         - `title`: The headline of the news article.
+         - `description`: A brief summary of the news article.
+         - `content`: Full text of the news article (if available).
+         - `publishedAt`: The date and time when the news article was published.
+         - `source`: The name of the source or publisher.
+      2. {inputm2}: The city or location to analyze.
+
+      ### Expected Output:
+      For the given JSON data and place, analyze the crime rate and safety using the following steps:
+      1. **Crime Type Analysis**:
+         - Identify and categorize types of crimes mentioned in the data (e.g., theft, assault, murder, fraud, etc.).
+         - Provide a breakdown of the most common crimes based on the number of mentions.
+
+      2. **Crime Frequency**:
+         - Analyze the frequency of crime reports within the dataset.
+         - If possible, calculate the approximate rate of crimes (e.g., crimes per week or month) based on the publication dates of the articles.
+
+      3. **Safety Assessment**:
+         - Based on the crime type and frequency, assess whether the place is generally safe, moderately safe, or unsafe.
+         - Justify your assessment by referencing the data trends (e.g., high frequency of violent crimes indicates unsafety).
+
+      4. **Recommendations**:
+         - Provide practical safety recommendations for people visiting or living in the place, if necessary.
+         - Suggest staying in specific areas, avoiding risky times, or taking extra precautions based on the data.
+
+      ### Guidelines for Analysis:
+      - Use the number of articles mentioning crime and their severity as an indicator of safety.
+      - Treat high occurrences of violent or organized crimes as indicators of unsafe conditions.
+      - Consider lower frequencies of minor crimes (e.g., petty theft) as indicators of moderate safety.
+
+      give the result in json format
+
+
+  mid_second_flow:                                       
+    type: "custom"
+    depends_on: [first_flow]  # Dependent on fist_flow , second_flow and third_flow
+    inputs:
+      inputm1: ${first_flow.output} # uses output of first_flow as input
+    model:
+      provider: "openai"
+      name: "gpt-4o"
+    prompt: |
+      You are a highly intelligent and analytical assistant specializing in cost-of-living and economic analysis. Your task is to evaluate the cost-effectiveness of a list of places using the **Big Mac Index** as a benchmark.
+
+      ### Context:
+      The Big Mac Index, published by *The Economist*, is a tool for understanding currency valuation and relative cost-of-living differences between countries. Higher index values indicate more expensive locations, while lower values indicate cost-effective places.
+
+      ### Task:
+      1. Extract the Big Mac Index values for each place in the given list (which is {inputm1}) from *The Economist's Big Mac Index page* at:  
+         [https://www.economist.com/interactive/big-mac-index](https://www.economist.com/interactive/big-mac-index).  
+
+         - If a place is not directly listed, use the nearest available country or region.
+         - If the index data is unavailable for a place, include a disclaimer stating this.
+
+      2. Compare the extracted index values and determine whether the place is **cost-effective**, **moderately priced**, or **expensive**. Use the following rules:
+         - **Cost-effective**: The Big Mac price is below the global average.
+         - **Moderately priced**: The Big Mac price is close to the global average (within ±10%).
+         - **Expensive**: The Big Mac price is significantly above the global average (>10% higher).
+
+      3. Provide a detailed analysis for each place, including:
+         - **Big Mac Index Value**: The extracted index or price in USD.
+         - **Global Average Comparison**: How it compares to the global average.
+         - **Cost Effectiveness**: Whether the place is cost-effective, moderately priced, or expensive.
+         - **Justification**: A short explanation based on the extracted data.
+
+      4. If the user provides a specific **budget** or **purpose** for their travel (e.g., luxury travel, budget-friendly), tailor your recommendations accordingly.
+
+      ### Example Input:
+      List of places: [New York, Tokyo, Mumbai, London, Bangkok]
+
+      ### Example Output:
+      1. **New York, USA**:
+         - **Big Mac Index Value**: $5.63
+         - **Global Average Comparison**: 15% above the global average of $4.90
+         - **Cost Effectiveness**: Expensive
+         - **Justification**: The Big Mac price in New York is significantly higher than the global average, reflecting a higher cost of living.
+
+      2. **Tokyo, Japan**:
+         - **Big Mac Index Value**: $3.75
+         - **Global Average Comparison**: 23% below the global average
+         - **Cost Effectiveness**: Cost-effective
+         - **Justification**: Tokyo offers Big Macs at a price well below the global average, indicating it is a relatively affordable location.
+
+      3. **Mumbai, India**:
+         - **Big Mac Index Value**: $2.50
+         - **Global Average Comparison**: 49% below the global average
+         - **Cost Effectiveness**: Cost-effective
+         - **Justification**: Mumbai has one of the lowest Big Mac prices, making it extremely affordable.
+
+      4. **London, UK**:
+         - **Big Mac Index Value**: $4.90
+         - **Global Average Comparison**: Equal to the global average
+         - **Cost Effectiveness**: Moderately priced
+         - **Justification**: The Big Mac price in London matches the global average, reflecting a standard cost of living.
+
+      5. **Bangkok, Thailand**:
+         - **Big Mac Index Value**: $3.20
+         - **Global Average Comparison**: 35% below the global average
+         - **Cost Effectiveness**: Cost-effective
+         - **Justification**: Bangkok is a budget-friendly destination based on its lower Big Mac Index value.
+
+      ### Notes for Implementation:
+      - Use the **Big Mac Index page** as the primary source for data extraction.
+      - Provide clear disclaimers for places where index data is unavailable.
+      - Ensure that the analysis is user-friendly and practical for travel or cost-of-living considerations.
+      - Assume the global average Big Mac price is $4.90 (or extract it dynamically from the page).
+
+      Now, evaluate the provided list of places and generate insights based on the criteria above.
+      give the result in json format
+
+
+  final_flow:                                       
+    type: "custom"
+    depends_on: [mid_second_flow , mid_first_flow, first_flow]  # Dependent on fist_flow , second_flow and third_flow
+    inputs:
+      inputf1: ${mid_first_flow.output} # uses output of first_flow as input
+      inputf2: ${mid_second_flow.output} # uses output of second_flow as input
+      inputf3: ${first_flow.output}
+    model:
+      provider: "openai"
+      name: "gpt-4o"
+    prompt: |
+      Format all the information json in proper format provided to you from {inputf1} , {inputf2} and {inputf3}
+
+
+      Generate a JSON output that is structured for a webpage display with the following requirements:
+      But don't put html tags
+      and also make it manageable to show
+      Structure the data into sections:
+      
+      A "Places" section with sub-sections for each location, including:
+      Name
+      Key attractions (as a bulleted list)
+      Tourist spots (as a bulleted list)
+      Cost breakdown (shown as labeled key-value pairs)
+      Travel feasibility (as a short paragraph)
+      Budget suggestions (as a short paragraph)
+      A "Safety Assessment" section with:
+      Risk level (as a heading)
+      Assessment summary (as a short paragraph)
+      Recommendations (as a bulleted list)
+      A "Big Mac Index" section with:
+      Place name
+      Index value
+      Global average comparison
+      Cost-effectiveness label
+      Include display attributes such as:
+      
+      Headings for each section and sub-section.
+      Use HTML tags where applicable for web display (e.g., <h1>, <p>, <ul>, <li>).
+      Ensure the output is well-indented and ready for integration into a webpage.
+      
+      convert the result into a json format which is easy to manage
+      
+
+output:
+  value:                                           # Combine & customise outputs in order
+    - ${final_flow.output}
+
+readme: |
+  # Travel Planner Flow Overview
+
+    ## Version
+    `0.1.0`
+
+    ## Name
+    **Travel Planner**
+
+    ## Description
+    Offers personalized travel destination suggestions, factoring in the user's mood, budget, location, duration, safety, and cost-effectiveness.
+
+    ## Inputs
+    - **Mood**: Defines the user’s travel vibe (e.g., adventurous, relaxing).
+    - **Duration**: Specifies the number of days or weeks available for travel.
+    - **Location**: The user’s current city/country.
+    - **Budget**: The user’s expected expenditure range.
+    - **Transport**: Preferred mode of transport (e.g., flight, train).
+    - **Safety Check**: Analyzes crime rate and safety of destinations.
+
+    ## Workflow Stages
+
+    ### 1. **First Flow (Travel Suggestions)**
+       - Suggests domestic and international travel destinations based on the user’s preferences (mood, budget, location, duration).
+       - Includes key attractions, costs, and travel feasibility for each destination.
+
+    ### 2. **Mid First Flow (Safety Assessment)**
+       - Analyzes safety data using crime-related articles about the destinations to assess their risk level.
+       - Provides safety recommendations.
+
+    ### 3. **Mid Second Flow (Cost Analysis)**
+       - Uses the Big Mac Index to assess cost-effectiveness of destinations.
+       - Provides cost breakdown and compares it with the global average to label the destination as cost-effective, moderately priced, or expensive.
+
+    ### 4. **Final Flow (Final Output)**
+       - Formats all the information into a structured, user-friendly JSON format suitable for a webpage display.
+
+    ## Outputs
+    1. **Travel Suggestions**:
+       - Detailed recommendations for both domestic and international destinations, including costs, feasibility, and mood alignment.
+
+    2. **Safety Assessment**:
+       - A risk-level evaluation based on crime analysis, with actionable safety recommendations.
+
+    3. **Cost Analysis**:
+       - Big Mac Index comparison showing the cost-effectiveness of destinations.
+
+    ## Example Output
+
+    ### Domestic Destinations:
+    1. **Destination 1**:
+       - **Why it matches**: [Explanation based on user's mood and preferences]
+       - **Key Attractions**: [List of attractions]
+       - **Cost Breakdown**: [Approximate costs for transport, accommodation, activities]
+       - **Travel Feasibility**: [How it fits within the user’s trip duration]
+
+    2. **Destination 2**:
+       - [Similar details as above]
+
+    ### International Destinations:
+    1. **Destination A (Country)**:
+       - **Big Mac Index**: [Index value]
+       - **Cost-Effectiveness**: [Cost-effective, moderately priced, or expensive]
+       - **Travel Feasibility**: [Feasibility based on duration and mode of transport]
+
+    ### Safety Assessment:
+    - **Risk Level**: Moderate
+    - **Summary**: [Analysis of crime data and safety]
+    - **Recommendations**: [Tips for safe travel]
+
+    ### Big Mac Index:
+    - Comparison of Big Mac prices between destinations.
+
+    ---
+
+    This flow combines detailed user input analysis with robust external data sources (e.g., crime news and Big Mac Index) to offer a comprehensive travel plan.
+

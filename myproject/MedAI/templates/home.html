@@ -1,0 +1,250 @@
+{% extends "base.html" %}{% block title %}Travel Itinerary Selector{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+<style>
+        /* Importing Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Merriweather:wght@400;700&display=swap');
+
+body {
+    font-family: 'Merriweather', serif;
+}
+
+h1, h2, h3 {
+    font-family: 'Montserrat', sans-serif;
+}
+
+        .navbar a {
+            transition: all 0.3s ease-in-out;
+        }
+        .navbar a:hover {
+            background-color: #4f46e5;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .form-input:focus {
+            border-color: #4f46e5;
+            outline: none;
+            box-shadow: 0 0 5px rgba(79, 70, 229, 0.5);
+        }
+
+        .form-button:hover {
+            background-color: #3b82f6;
+        }
+
+        .form-button:active {
+            transform: scale(0.98);
+        }
+
+        .loading-screen {
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .slideshow-container {
+            height: 500px;
+        }
+
+        .mySlides img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .itinerary-selector {
+            display: block;
+            background: #f9fafb;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .separator {
+            width: 80%;
+            height: 2px;
+            background-color: #ddd;
+            margin: 20px auto;
+        }
+        .modern-font {
+           
+            font-size: 2.5em; /* Larger font size */
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+            color: #333;
+        }
+        .loader {
+        border: 16px solid #f3f3f3; /* Light grey */
+        border-top: 16px solid #3498db; /* Blue */
+        border-radius: 50%;
+        width: 120px;
+        height: 120px;
+        animation: spin 2s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }}
+</style>
+{% endblock %}
+{% block content %}
+<body class="bg-gray-50 font-sans">
+
+    <nav class="navbar flex justify-between items-center bg-blue-600 p-4 text-white">
+        <a href="#home" class="font-bold text-lg">Home</a>
+        <img src="" alt="Logo" id="logo" class="h-10">
+    <div class="space-x-4">
+        <button id="toggle-itinerary" class="hover:bg-blue-500 px-3 py-2 rounded">Itinerary</button>
+        <a href="#about" class="hover:bg-blue-500 px-3 py-2 rounded">About</a>
+    </div>
+</nav>
+<div class="separator"></div>
+
+<h1 class="modern-font">Traveling made easier with us !!</h1>
+<section class="slideshow-container relative overflow-hidden max-w-screen-xl mx-auto mt-6 rounded-lg shadow-lg">
+    <div class="mySlides fade">
+        <img src="https://images.pexels.com/photos/3672388/pexels-photo-3672388.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" class="w-full">
+    </div>
+    <div class="mySlides fade">
+        <img src="https://images.pexels.com/photos/14520365/pexels-photo-14520365.jpeg?auto=compress&cs=tinysrgb&w=600" class="w-full">
+    </div>
+    <div class="mySlides fade">
+        <img src="https://images.pexels.com/photos/12912712/pexels-photo-12912712.jpeg?auto=compress&cs=tinysrgb&w=600" class="w-full">
+    </div>
+    <a class="prev absolute top-1/2 left-2 transform -translate-y-1/2 bg-blue-500 text-white px-3 py-2 rounded-full" onclick="plusSlides(-1)">&#10094;</a>
+    <a class="next absolute top-1/2 right-2 transform -translate-y-1/2 bg-blue-500 text-white px-3 py-2 rounded-full" onclick="plusSlides(1)">&#10095;</a>
+</section>
+<!-- Add the line separator and heading below the slideshow -->
+<div class="separator"></div>
+<h2 class="text-center text-xl font-bold mt-4">Provide us the details below.</h2>
+
+<section id="itinerary-section" class="itinerary-selector max-w-screen-md mx-auto">
+    <h1 class="text-2xl font-bold mb-6 text-gray-800">Itinerary Selector</h1>
+    <form id="itinerary-form" class="space-y-6" method="POST">
+        <div>
+            <label for="mood" class="block text-gray-700 font-medium">Your current mood for travelling:</label>
+            <input type="text" id="mood" name="mood" class="form-input w-full p-2 border rounded mt-1" required>
+        </div>
+        <div>
+            <label for="duration" class="block text-gray-700 font-medium">Duration:</label>
+            <input type="number" id="duration" name="duration" class="form-input w-full p-2 border rounded mt-1" required>
+        </div>
+        <div>
+            <label for="place" class="block text-gray-700 font-medium">Place of Residence:</label>
+            <input type="text" id="destination" name="destination" class="form-input w-full p-2 border rounded mt-1" required>
+        </div>
+        
+        <div>
+            <label for="budget" class="block text-gray-700 font-medium">Budget ($):</label>
+            <input type="number" id="budget" name="budget" class="form-input w-full p-2 border rounded mt-1" required>
+        </div>
+        <div>
+            <label for="mode" class="block text-gray-700 font-medium">Mode of Transport:</label>
+            <input type="text" id="mode" name="mode" class="form-input w-full p-2 border rounded mt-1" required>
+        </div>
+        <button type="submit" class="form-button w-full bg-blue-600 text-white py-2 rounded font-medium">Submit</button>
+    </form>
+</section>
+
+<div id="loading" class="loading-screen hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    <div class="loader"></div>
+    <p class="text-white text-lg">Loading...</p>
+</div>
+
+<script>
+    document.getElementById('toggle-itinerary').addEventListener('click', function () {
+        const itinerarySection = document.getElementById('itinerary-section');
+        if (itinerarySection.style.display === 'none' || itinerarySection.style.display === '') {
+            itinerarySection.style.display = 'block';
+            window.scrollTo({ top: itinerarySection.offsetTop, behavior: 'smooth' });
+        } else {
+            itinerarySection.style.display = 'none';
+        }
+    });
+    
+    document.getElementById('itinerary-form').addEventListener('submit', async function (event) {
+        event.preventDefault(); // Prevent the default form submission behavior
+
+        // Show the loading screen
+        document.getElementById('loading').classList.remove('hidden');
+
+        // Gather form data
+        const formData = {
+            mood: document.getElementById('mood').value,
+            duration: document.getElementById('duration').value,
+            destination: document.getElementById('destination').value,
+            budget: document.getElementById('budget').value,
+            mode: document.getElementById('mode').value
+        };
+
+        try {
+            // Send POST request to the /head API
+            const response = await fetch('/head/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', // Set the correct content type
+                    'X-CSRFToken': getCookie('csrftoken') // Include CSRF token for Django
+                },
+                body: JSON.stringify(formData) // Send the form data as JSON
+            });
+
+            // Handle the response
+            if (response.ok) {
+                const data = await response.json(); // Parse the JSON response
+                console.log('Success:', data);
+
+                // Redirect or update the page based on the response
+                document.getElementById('loading').classList.add('hidden');
+                alert('API response received! Check console for details.');
+            } else {
+                throw new Error(`Error: ${response.status}`);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+        } finally {
+            // Hide the loading screen after completion
+            document.getElementById('loading').classList.add('hidden');
+        }
+    });
+
+    // Function to get the CSRF token from cookies
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+    let slideIndex = 0;
+    showSlides();
+    
+    function showSlides() {
+        let slides = document.getElementsByClassName("mySlides");
+        for (let i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+        }
+        slideIndex++;
+        if (slideIndex > slides.length) { slideIndex = 1; }
+        slides[slideIndex - 1].style.display = "block";
+        setTimeout(showSlides, 3000);
+    }
+    
+    function plusSlides(n) {
+        showSlides(slideIndex += n);
+    }
+</script>
+</body>
+{% endblock %}

@@ -1,0 +1,405 @@
+{% extends "base.html" %}
+{% block title %}Page-Title{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Merriweather:wght@400;700&display=swap');
+
+body {
+    font-family: 'Merriweather', serif;
+}
+
+h1, h2, h3 {
+    font-family: 'Montserrat', sans-serif;
+}
+        .facts-section {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 250px;
+            background-color: #fef08a;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .facts-section p {
+            font-size: 0.9rem;
+            color: #1f2937;
+        }
+
+        .feedback-form input:focus, .feedback-form textarea:focus {
+            border-color: #4f46e5;
+            outline: none;
+            box-shadow: 0 0 5px rgba(79, 70, 229, 0.5);
+        }
+
+        .feedback-form button:hover {
+            background-color: #3b82f6;
+        }
+
+        .feedback-form button:active {
+            transform: scale(0.98);
+        }
+    #result-card {
+        transition: transform 0.3s ease-in-out;
+    }
+
+    #result-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    </style>
+{% endblock %}
+{% block content %}
+<body class="bg-gray-50 font-sans relative">
+    <header class="bg-blue-600 text-white p-6 text-center">
+        <h1 class="text-2xl font-bold">Your Travel Itinerary</h1>
+    </header>
+
+    <main class="max-w-5xl mx-auto p-6">
+        <!-- Results Section -->
+       
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-6" id = 'result1'>
+            <div class="bg-white p-6 rounded-lg shadow-lg" id = 'result-card'>
+                <h2 class="text-xl font-bold mb-4">Destination-1</h2>
+                <p class="text-gray-700" id = 'place1'>Paris, France</p></div>
+            <div class="bg-white p-6 rounded-lg shadow-lg" id = 'result-card'>
+                <h2 class="text-xl font-bold mb-4">Key Attractions</h2>
+                <p class="text-gray-700" id = 'att1'>Paris, France</p></div>
+            <div class="bg-white p-6 rounded-lg shadow-lg" id = 'result-card'>
+                <h2 class="text-xl font-bold mb-4">Tourist Spots</h2>
+                <p class="text-gray-700" id ='spot1'>Paris, France</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-lg" id = 'result-card'>
+                <h2 class="text-xl font-bold mb-4">Cost Breakdown</h2>
+                <p class="text-gray-700" id = 'break1'>7 Days</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-lg" id = 'result-card'>
+                <h2 class="text-xl font-bold mb-4">Travel Feasibilty</h2>
+                <p class="text-gray-700" id = 'feas1'>$1500</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-lg" id = 'result-card'>
+                <h2 class="text-xl font-bold mb-4">Budget</h2>
+                <p class="text-gray-700" id = 'bud1'>$1500</p>
+            </div>
+        </section>
+        <hr class="my-10">
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-6" id = 'result1'>
+            <div class="bg-white p-6 rounded-lg shadow-lg" id = 'result-card'>
+                <h2 class="text-xl font-bold mb-4">Destination-2</h2>
+                <p class="text-gray-700" id = 'place2'>Paris, France</p></div>
+            <div class="bg-white p-6 rounded-lg shadow-lg" id = 'result-card'>
+                <h2 class="text-xl font-bold mb-4">Key Attractions</h2>
+                <p class="text-gray-700" id = 'att2'>Paris, France</p></div>
+            <div class="bg-white p-6 rounded-lg shadow-lg" id = 'result-card'>
+                <h2 class="text-xl font-bold mb-4">Tourist Spots</h2>
+                <p class="text-gray-700" id ='spot2'>Paris, France</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-lg" id = 'result-card'>
+                <h2 class="text-xl font-bold mb-4">Cost Breakdown</h2>
+                <p class="text-gray-700" id = 'break2'>7 Days</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-lg" id = 'result-card'>
+                <h2 class="text-xl font-bold mb-4">Travel Feasibilty</h2>
+                <p class="text-gray-700" id = 'feas2'>$1500</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-lg" id = 'result-card'>
+                <h2 class="text-xl font-bold mb-4" id = 'bud2'>Budget</h2>
+                <p class="text-gray-700">$1500</p>
+            </div>
+        </section>
+        <hr class="my-10">
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-6" id = 'result1'>
+            <div class="bg-white p-6 rounded-lg shadow-lg" id = 'result-card'>
+                <h2 class="text-xl font-bold mb-4">Destination-3</h2>
+                <p class="text-gray-700" id ='place3'>Paris, France</p></div>
+            <div class="bg-white p-6 rounded-lg shadow-lg" id = 'result-card'>
+                <h2 class="text-xl font-bold mb-4">Key Attractions</h2>
+                <p class="text-gray-700" id = 'att3'>Paris, France</p></div>
+            <div class="bg-white p-6 rounded-lg shadow-lg" id = 'result-card'>
+                <h2 class="text-xl font-bold mb-4">Tourist Spots</h2>
+                <p class="text-gray-700" id ='spot3'>Paris, France</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-lg" id = 'result-card'>
+                <h2 class="text-xl font-bold mb-4">Cost Breakdown</h2>
+                <p class="text-gray-700" id = 'break3'>7 Days</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-lg" id = 'result-card'>
+                <h2 class="text-xl font-bold mb-4">Travel Feasibilty</h2>
+                <p class="text-gray-700" id = 'feas3'>$1500</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-lg" id = 'result-card'>
+                <h2 class="text-xl font-bold mb-4">Budget</h2>
+                <p class="text-gray-700" id = 'bud3'>$1500</p>
+            </div>
+        </section>
+
+        <hr class="my-10">
+        <h2 class="text-xl font-bold mb-4 text-center">Help us make your experience better the next time</h2>
+        <!-- Feedback Section -->
+        <section class="mt-10">
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-xl font-bold mb-4">Feedback Form</h2>
+                <form class="feedback-form space-y-4">
+                    <div>
+                        <label for="name" class="block text-gray-700">Name:</label>
+                        <input type="text" id="name" name="name" class="form-input w-full p-2 border rounded">
+                    </div>
+                    <div>
+                        <label for="email" class="block text-gray-700">Email:</label>
+                        <input type="email" id="email" name="email" class="form-input w-full p-2 border rounded">
+                    </div>
+                    <div>
+                        <label for="feedback" class="block text-gray-700">Feedback:</label>
+                        <textarea id="feedback" name="feedback" rows="4" class="form-input w-full p-2 border rounded"></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded font-medium">Submit</button>
+                </form>
+            </div>
+        </section>
+        
+    </main>
+
+    <!-- Facts Section -->
+    <aside class="facts-section">
+        <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="document.querySelector('.facts-section').style.display='none'">&times;</button>
+        <h3 class="font-bold text-lg mb-2">Did You Know?</h3>
+        <p>The Eiffel Tower in Paris is painted every 7 years to protect it from rust.</p>
+    </aside>
+
+    <script>
+        let output;
+      document.addEventListener('DOMContentLoaded', () => {
+        const result = "{{ result|escapejs }}"; // Escapes special characters for JavaScript compatibility
+        console.log("Result from Django:", result);
+    if (result!=0){
+         output = JSON.parse(result)}
+    else{
+         output = { "Places": [
+    {
+      "Name": "Rishikesh, Uttarakhand",
+      "Key_Attractions": [
+        "Rafting in the Ganges",
+        "Bungee jumping",
+        "Trekking to Neergarh Waterfall",
+        "Visit to Beatles Ashram"
+      ],
+      "Tourist_Spots": [
+        "Laxman Jhula",
+        "Parmarth Niketan",
+        "Triveni Ghat",
+        "Ram Jhula"
+      ],
+      "Cost_Breakdown": {
+        "Transport": "$40–$60 by train/bus from Delhi",
+        "Accommodation": "$20–$50 per night",
+        "Activities": "$100"
+      },
+      "Travel_Feasibility": "Rishikesh is perfect for a 6-day trip, being just a few hours away from Delhi.",
+      "Budget_Suggestions": "Stay in budget hostels and enjoy affordable rafting experiences."
+    },
+    {
+      "Name": "Manali, Himachal Pradesh",
+      "Key_Attractions": [
+        "Solang Valley for paragliding",
+        "Rohtang Pass for snow activities",
+        "Trekking trails like Beas Kund"
+      ],
+      "Tourist_Spots": [
+        "Hidimba Devi Temple",
+        "Manu Temple",
+        "Vashisht Hot Water Springs",
+        "Old Manali"
+      ],
+      "Cost_Breakdown": {
+        "Transport": "$60–$100 via bus",
+        "Accommodation": "$30–$70 per night",
+        "Activities": "$150–$200"
+      },
+      "Travel_Feasibility": "Manali is accessible for a week-long trip, maximizing outdoor fun.",
+      "Budget_Suggestions": "Consider shared trips for activities to save money."
+    },
+    {
+      "Name": "Coorg, Karnataka",
+      "Key_Attractions": [
+        "Abbey Falls",
+        "Dubare Elephant Camp",
+        "Trekking at Tadiandamol Peak"
+      ],
+      "Tourist_Spots": [
+        "Raja's Seat",
+        "Madikeri Fort",
+        "Nagarhole National Park",
+        "Golden Temple (Namdroling Monastery)"
+      ],
+      "Cost_Breakdown": {
+        "Transport": "$100–$150 by flight/train and bus",
+        "Accommodation": "$30–$60 per night",
+        "Activities": "$100"
+      },
+      "Travel_Feasibility": "Coorg provides a relaxing yet adventurous getaway within 6 days.",
+      "Budget_Suggestions": "Opt for homestays for a more budget-friendly experience."
+    },
+    {
+      "Name": "Kathmandu, Nepal",
+      "Key_Attractions": [
+        "Boudhanath Stupa",
+        "Swayambhunath Temple",
+        "Short treks in the Himalayas"
+      ],
+      "Tourist_Spots": [
+        "Pashupatinath Temple",
+        "Durbar Square",
+        "Patan Museum",
+        "Garden of Dreams"
+      ],
+      "Cost_Breakdown": {
+        "Transport": "$150–$200 for round-trip flights",
+        "Accommodation": "$20–$50 per night",
+        "Activities": "$150"
+      },
+      "Travel_Feasibility": "Convenient for a 6-day itinerary with a blend of culture and adventure.",
+      "Budget_Suggestions": "Use local transport to explore and save on costs."
+    },
+    {
+      "Name": "Dubai, UAE",
+      "Key_Attractions": [
+        "Burj Khalifa",
+        "Desert safari",
+        "Skydiving over Palm Jumeirah"
+      ],
+      "Tourist_Spots": [
+        "Dubai Mall",
+        "Dubai Marina",
+        "Jumeirah Beach",
+        "Palm Jumeirah"
+      ],
+      "Cost_Breakdown": {
+        "Transport": "$250–$350 for flights",
+        "Accommodation": "$40–$80 per night",
+        "Activities": "$200"
+      },
+      "Travel_Feasibility": "Quick 3–4-hour flight with plenty to do in 6 days.",
+      "Budget_Suggestions": "Book activities in advance for potential discounts."
+    },
+    {
+      "Name": "Bangkok and Surroundings, Thailand",
+      "Key_Attractions": [
+        "Floating markets",
+        "Ayutthaya Island excursions",
+        "Adventure parks"
+      ],
+      "Tourist_Spots": [
+        "Grand Palace",
+        "Wat Pho",
+        "Chatuchak Market",
+        "Chao Phraya River"
+      ],
+      "Cost_Breakdown": {
+        "Transport": "$300–$400 for flights",
+        "Accommodation": "$30–$60 per night",
+        "Activities": "$200"
+      },
+      "Travel_Feasibility": "Provides diverse activities suitable for 6 days of exploration.",
+      "Budget_Suggestions": "Consider street food and local eateries for affordable meals."
+    }
+  ],
+  "Safety_Assessment": {
+    "Risk_Level": "Moderately Safe to Unsafe",
+    "Assessment_Summary": "The presence of serious crimes such as robbery and assault within a short period could indicate potential safety concerns.",
+    "Recommendations": [
+      "Avoid high-risk areas and times.",
+      "Stay informed through local news.",
+      "Maintain vigilance and secure personal belongings.",
+      "Seek safe accommodations in well-reviewed areas."
+    ]
+  },
+  "Big_Mac_Index": [
+    {
+      "Place_Name": "Rishikesh, Uttarakhand",
+      "Index_Value": "$2.50",
+      "Global_Average_Comparison": "49% below the global average of $4.90",
+      "Cost_Effectiveness_Label": "Cost-effective"
+    },
+    {
+      "Place_Name": "Manali, Himachal Pradesh",
+      "Index_Value": "$2.50",
+      "Global_Average_Comparison": "49% below the global average",
+      "Cost_Effectiveness_Label": "Cost-effective"
+    },
+    {
+      "Place_Name": "Coorg, Karnataka",
+      "Index_Value": "$2.50",
+      "Global_Average_Comparison": "49% below the global average",
+      "Cost_Effectiveness_Label": "Cost-effective"
+    },
+    {
+      "Place_Name": "Kathmandu, Nepal",
+      "Index_Value": "Data Unavailable",
+      "Global_Average_Comparison": "N/A",
+      "Cost_Effectiveness_Label": "N/A"
+    },
+    {
+      "Place_Name": "Dubai, UAE",
+      "Index_Value": "$6.16",
+      "Global_Average_Comparison": "26% above the global average of $4.90",
+      "Cost_Effectiveness_Label": "Expensive"
+    },
+    {
+      "Place_Name": "Bangkok, Thailand",
+      "Index_Value": "$3.20",
+      "Global_Average_Comparison": "35% below the global average",
+      "Cost_Effectiveness_Label": "Cost-effective"
+    }
+  ] }};
+
+    // Helper function to populate sections dynamically
+    function populateSection(placeIndex, placeData) {
+        document.getElementById(`place${placeIndex}`).textContent = placeData.Name;
+
+        // Populate Key Attractions
+        const keyAttractions = placeData.Key_Attractions.join(', ');
+        document.getElementById(`att${placeIndex}`).textContent = keyAttractions;
+
+        // Populate Tourist Spots
+        const touristSpots = placeData.Tourist_Spots.join(', ');
+        document.getElementById(`spot${placeIndex}`).textContent = touristSpots;
+
+        // Populate Cost Breakdown
+        const costBreakdown = `
+            Transport: ${placeData.Cost_Breakdown.Transport}, 
+            Accommodation: ${placeData.Cost_Breakdown.Accommodation}, 
+            Activities: ${placeData.Cost_Breakdown.Activities}
+        `;
+        document.getElementById(`break${placeIndex}`).textContent = costBreakdown;
+
+        // Populate Travel Feasibility
+        document.getElementById(`feas${placeIndex}`).textContent = placeData.Travel_Feasibility;
+
+        // Populate Budget Suggestions
+        document.getElementById(`bud${placeIndex}`).textContent = placeData.Budget_Suggestions;
+    }
+
+    // Loop through the places and populate each section
+    output.Places.forEach((place, index) => {
+        if (index < 3) { // Update only for Destination 1, 2, and 3
+            populateSection(index + 1, place);
+        }
+    });
+});
+
+      </script>
+</body>
+<!-- <body>
+
+    <div>1</div>
+    <script>
+        // Use window.onload to ensure the page loads only after data is fetched
+        window.onload = async function() {
+            // Fetch data from Django view
+            const dataFromPython = await JSON.parse('{{ result }}');
+        }
+    </script>
+</body> -->
+{% endblock %}
