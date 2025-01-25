@@ -3,7 +3,7 @@ from mira_sdk.exceptions import FlowError
 import os
 
 client = MiraClient(config={"API_KEY": "sb-a17e177d1136349f0199d7ef2afd7829"})
-flow_name = "riteshco/travel-planner-2"                 # Flow identifier
+flow_name = "riteshco/travel-planner-3"                 # Flow identifier
 input_data = {                                              # Prepare test inputs
     "prime_input_1": "Adventuruous",
     "prime_input_2": "6 days",
